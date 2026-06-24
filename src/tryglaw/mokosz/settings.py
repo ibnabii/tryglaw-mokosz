@@ -5,8 +5,6 @@ class MokoszSettings(BaseSettings):
     perun_ws_url: str = "ws://localhost:19000/ws"
     api_key: str = ""
     description: str = "Mokosz Instance"
-    system: str = ""
-    environment: str = ""
     target_timeout: float = 300.0
     log_level: str = "DEBUG"
     payload_log_file: str = ""

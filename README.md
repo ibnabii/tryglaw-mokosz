@@ -23,8 +23,6 @@ Copy `.env.template` to `.env` and configure:
 | MOKOSZ_PERUN_WS_URL | Perun WebSocket URL | ws://localhost:9000/ws |
 | MOKOSZ_API_KEY | API key for authenticating to Perun | (required) |
 | MOKOSZ_DESCRIPTION | Human-readable instance description | Mokosz Instance |
-| MOKOSZ_SYSTEM | Logical system name (used for discovery) | (required) |
-| MOKOSZ_ENVIRONMENT | Logical environment name (used for discovery) | (required) |
 | MOKOSZ_TARGET_TIMEOUT | Timeout for target HTTP calls (seconds) | 300 |
 | MOKOSZ_LOG_LEVEL | Logging level | DEBUG |
 | MOKOSZ_PAYLOAD_LOG_FILE | File path for payload logging | (optional) |
@@ -36,7 +34,7 @@ Copy `.env.template` to `.env` and configure:
 python -m tryglaw.mokosz
 ```
 
-Mokosz will connect to Perun, register itself with the configured system/environment metadata, and begin listening for requests. If the connection drops, it reconnects automatically with exponential backoff (1s, 2s, 4s, ... up to 60s).
+Mokosz will connect to Perun, register itself, and begin listening for requests. If the connection drops, it reconnects automatically with exponential backoff (1s, 2s, 4s, ... up to 60s).
 
 ## Behavior
 
@@ -75,18 +73,16 @@ This setting only affects the Mokosz-to-Perun WebSocket connection. Certificate 
 
 ## Registration metadata
 
-On connect, Mokosz sends its metadata to Perun:
+On connect, Mokosz sends its description and hostname to Perun:
 
 ```json
 {
   "apikey": "...",
-  "description": "DEV system2 env2a gateway",
+  "description": "Production gateway",
   "metadata": {
-    "system": "system2",
-    "environment": "env2a",
     "hostname": "restricted-host-01"
   }
 }
 ```
 
-This metadata is used by Weles (via Perun's discovery API) to auto-configure routing.
+Mokosz is a pure executor. It does not declare system or environment. All routing configuration (which system/environment a Mokosz instance serves) is managed in Weles via named aliases. See `README_weles.md` for details.

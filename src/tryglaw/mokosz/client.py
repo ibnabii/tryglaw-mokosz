@@ -31,11 +31,7 @@ class MokoszClient:
         return MokoszRegistration(
             apikey=self._settings.api_key,
             description=self._settings.description,
-            metadata={
-                "system": self._settings.system,
-                "environment": self._settings.environment,
-                "hostname": socket.gethostname(),
-            },
+            metadata={"hostname": socket.gethostname()},
         )
 
     async def run(self) -> None:
