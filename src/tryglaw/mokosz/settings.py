@@ -1,5 +1,7 @@
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
+from tryglaw.common.security import parse_key_list
+
 
 class MokoszSettings(BaseSettings):
     perun_ws_url: str = "ws://localhost:19000/ws"
@@ -9,6 +11,12 @@ class MokoszSettings(BaseSettings):
     log_level: str = "DEBUG"
     payload_log_file: str = ""
     tls_verify: bool = True
+    access_keys: str = ""
+    allow_proxy: bool = False
+
+    @property
+    def access_keys_list(self) -> list[str]:
+        return parse_key_list(self.access_keys)
 
     model_config = SettingsConfigDict(
         env_prefix="MOKOSZ_",
