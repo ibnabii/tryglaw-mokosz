@@ -39,6 +39,7 @@ class MokoszRegistration(BaseModel):
     metadata: dict[str, Any] = Field(default_factory=dict)
     access_keys: list[str] = Field(default_factory=list)
     supports_proxy: bool = False
+    supports_fileshare: bool = False
 
 
 class MokoszInfo(BaseModel):
@@ -48,6 +49,7 @@ class MokoszInfo(BaseModel):
     metadata: dict[str, Any] = Field(default_factory=dict)
     last_seen: str | None = None
     supports_proxy: bool = False
+    supports_fileshare: bool = False
 
 
 class ErrorResponse(BaseModel):
@@ -80,4 +82,33 @@ class TunnelOpenAck(BaseModel):
 
 class TunnelClose(BaseModel):
     type: str = "tunnel_close"
+    stream_id: int
+
+
+class FileOpRequest(BaseModel):
+    type: str = "file_op"
+    version: str = MESSAGE_VERSION
+    request_id: str = Field(default_factory=lambda: str(uuid.uuid4()))
+    mokosz_id: str = ""
+    op: str  # list, stat, mkdir, delete, download, upload
+    root: str = ""
+    path: str = ""
+    stream_id: int | None = None
+    size: int | None = None
+
+
+class FileOpResponse(BaseModel):
+    type: str = "file_op_response"
+    version: str = MESSAGE_VERSION
+    request_id: str = ""
+    ok: bool = True
+    error: str | None = None
+    entries: list[dict[str, Any]] | None = None
+    stat: dict[str, Any] | None = None
+    stream_id: int | None = None
+    size: int | None = None
+
+
+class FileDataEnd(BaseModel):
+    type: str = "file_data_end"
     stream_id: int

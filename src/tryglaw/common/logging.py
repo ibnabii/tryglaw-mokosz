@@ -5,6 +5,9 @@ import logging
 import sys
 from pathlib import Path
 
+STARTUP = 25
+logging.addLevelName(STARTUP, "INFO")
+
 _LEVEL_COLORS = {
     "DEBUG": "\033[32m",
     "INFO": "\033[32m",
@@ -67,3 +70,12 @@ def red(text: str) -> str:
 
 def yellow(text: str) -> str:
     return f"\033[33m{text}\033[0m"
+
+
+def startup_log(logger: logging.Logger, msg: str, *args: object) -> None:
+    original_level = logger.level
+    if original_level > logging.INFO:
+        logger.setLevel(logging.INFO)
+    logger.info(msg, *args)
+    if original_level > logging.INFO:
+        logger.setLevel(original_level)

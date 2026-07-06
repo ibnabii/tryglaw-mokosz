@@ -13,6 +13,8 @@ class MokoszSettings(BaseSettings):
     tls_verify: bool = True
     access_keys: str = ""
     allow_proxy: bool = False
+    fileshare_enabled: bool = False
+    fileshare_config: str = ""
 
     @property
     def access_keys_list(self) -> list[str]:
